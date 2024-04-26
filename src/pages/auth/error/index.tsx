@@ -3,10 +3,11 @@ import { ReactNode } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 // ** MUI Components
-import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 
@@ -22,6 +23,7 @@ const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
     width: '90vw'
   }
 }))
+
 const Img = styled('img')(({ theme }) => ({
   marginTop: theme.spacing(15),
   marginBottom: theme.spacing(15),
@@ -35,28 +37,36 @@ const Img = styled('img')(({ theme }) => ({
   }
 }))
 
-const UnderMaintenance = () => {
+const AuthErrorPage = () => {
+  // ** Hooks
+  const searchParams = useSearchParams()
+
+  // ** Vars
+  const error = searchParams.get('error') || '/'
+
   return (
     <Box className='content-center'>
       <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <BoxWrapper>
+          <Typography variant='h1' sx={{ mb: 2.5 }}>
+            {`Auth Error ${error}`}
+          </Typography>
           <Typography variant='h5' sx={{ mb: 2.5, fontSize: '1.5rem !important' }}>
-            Under Maintenance! 🚧
+            Internal server error 👨🏻‍💻
           </Typography>
-          <Typography variant='body2'>
-            Sorry for the inconvenience but we&prime;re performing some maintenance at the moment
-          </Typography>
+          <Typography variant='body2'>Oops, something went wrong!</Typography>
         </BoxWrapper>
-        <Img height='500' alt='under-maintenance-illustration' src='/images/pages/misc-under-maintenance.png' />
+        <Img alt='error-illustration' src='/images/pages/500.png' />
         <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
           Back to Home
         </Button>
       </Box>
-      <FooterIllustrations image={`/images/pages/misc-under-maintenance-object.png`} />
+      <FooterIllustrations image='/images/pages/misc-500-object.png' />
     </Box>
   )
 }
 
-UnderMaintenance.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+AuthErrorPage.authGuard = false
+AuthErrorPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-export default UnderMaintenance
+export default AuthErrorPage
